@@ -2,7 +2,7 @@
 
 The VectorFS website — landing page, documentation, and release notes — built with
 [OINK](https://oink.pgsty.com/) v1.5.0 on Hugo Extended 0.168.0 and deployed to
-GitHub Pages. Live at <https://vectorfs.github.io/>.
+GitHub Pages. Live at <https://vectorfs.io/>.
 
 The product itself lives in [vectorfs/vectorfs](https://github.com/vectorfs/vectorfs).
 
@@ -74,9 +74,10 @@ setup:
 
 The workflow installs Go 1.27.3 and Hugo Extended 0.168.0, downloads the pinned
 OINK module, builds with `--minify`, derives the correct base URL from the Pages
-configuration (project subpath or custom domain), and uploads the artifact. To
-serve the site at a custom domain instead of `vectorfs.github.io`, add the
-domain in **Settings → Pages** — the workflow picks it up automatically.
+configuration (project subpath or custom domain), and uploads the artifact. The
+custom domain `vectorfs.io` is configured in **Settings → Pages** (source stays
+**GitHub Actions**); the root `CNAME` file is inert under Actions-mode
+deployments — the domain comes from the Pages settings.
 
 ## License
 

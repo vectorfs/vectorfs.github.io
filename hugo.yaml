@@ -1,7 +1,7 @@
 # VectorFS website — the only site configuration file.
 
 title: &siteTitle VectorFS
-baseURL: https://vectorfs.github.io/
+baseURL: https://vectorfs.io/
 defaultContentLanguage: en
 disableLanguages: [fr]
 enableGitInfo: true
