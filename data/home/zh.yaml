@@ -12,7 +12,7 @@ hero:
   actions:
     - { label: 快速上手, url: docs/get-started/, icon: fa-solid fa-rocket, style: primary }
     - { label: GitHub, url: https://github.com/vectorfs/vectorfs, icon: fa-brands fa-github, style: ghost, external: true }
-  image: { src: icons/logo.svg, dark: icons/logo.svg, alt: VectorFS 标识 }
+  image: { src: icons/logo.png, dark: icons/logo.png, alt: VectorFS 标识 }
   media: { ratio: '1fr 220px', max_width: 220px, hide_below: md }
 
 metrics:

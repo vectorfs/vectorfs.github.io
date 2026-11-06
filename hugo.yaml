@@ -59,7 +59,7 @@ params:
   footer_center_info: ''
   github_repo: https://github.com/vectorfs/vectorfs
   github_branch: main
-  logo: icons/logo.svg
+  logo: icons/logo.png
   ui:
     compare: true
     preset: paper
