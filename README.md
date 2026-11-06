@@ -1,112 +1,83 @@
-# OINK Starter
+# vectorfs.github.io
 
-A small, production-ready skeleton for open-source project sites built with [OINK](https://oink.pgsty.com/) and Hugo. It ships with English, Simplified Chinese, and French home pages; Blog, Docs, and Book content; and deployment workflows for GitHub Pages and Cloudflare Pages.
+The VectorFS website — landing page, documentation, and release notes — built with
+[OINK](https://oink.pgsty.com/) v1.5.0 on Hugo Extended 0.168.0 and deployed to
+GitHub Pages. Live at <https://vectorfs.github.io/>.
 
-No OINK documentation, analytics account, comment repository, regression suite, or project-specific brand is included. Google Analytics and Giscus stay fully commented until you configure them.
+The product itself lives in [vectorfs/vectorfs](https://github.com/vectorfs/vectorfs).
 
-## Use this template
-
-Select **Use this template** on GitHub, create your repository, then run three commands:
+## Run locally
 
 ```bash
-git clone https://github.com/YOU/YOUR-REPOSITORY.git
-cd YOUR-REPOSITORY
+git clone https://github.com/vectorfs/vectorfs.github.io.git
+cd vectorfs.github.io
 hugo server
 ```
 
-Open <http://localhost:1313/>. The first run downloads the pinned OINK Hugo Module (`v1.5.0`). You only need Git, Go 1.27.3 or newer, and Hugo Extended 0.168.0 or newer — no external Sass, Node.js, or npm installation is required.
+Open <http://localhost:1313/>. The first run downloads the pinned OINK Hugo module
+(`v1.5.0`). You need Git, Go 1.27.3 or newer, and Hugo Extended 0.168.0 or newer —
+no external Sass, Node.js, or npm.
 
-Cloning this original template is also exactly three commands:
-
-```bash
-git clone https://github.com/pgsty/oink-starter.git
-cd oink-starter
-hugo server
-```
-
-## Make it yours
-
-The default site works unchanged. For a real project, start with only these edits:
-
-1. Change `Project Name` and `https://example.org/` at the top of `hugo.yaml`.
-2. Replace the three compact home-page files under `data/home/`.
-3. Rewrite or delete the sample pages under `content/`.
-
-The title uses one YAML anchor, so one edit changes all three languages. Navigation lives with each section’s translated `_index` page; renaming a section does not require editing a second menu tree. Replace `assets/icons/logo.svg` and `static/favicon.svg` only when you have real project artwork.
-
-Common optional settings are already organized and commented in `hugo.yaml`: repository links, Giscus, Google Analytics, accent color, typography, image zoom, sharing, and feedback. Uncomment a complete block only when you are ready to operate that integration.
-
-## Content map
-
-```text
-content/
-├── blog/
-│   ├── post/          articles
-│   ├── design/        design notes and decisions
-│   └── release/       release announcements
-├── docs/
-│   ├── introduction/
-│   ├── get-started/
-│   ├── tutorial/
-│   └── reference/
-└── book/              a short tutorial about this starter
-```
-
-English files end in `.md`; their Chinese and French peers end in `.zh.md` and `.fr.md`. Keep translated files side by side and keep explicit heading IDs aligned.
-
-## Language profiles
-
-The root `hugo.yaml` enables English, Chinese, and French. Two copy-ready alternatives are included:
-
-```bash
-cp examples/hugo.single.yaml hugo.yaml     # English only
-cp examples/hugo.bilingual.yaml hugo.yaml  # English + Chinese
-```
-
-The profiles keep unused languages declared but disabled, so Hugo recognizes their suffixes and safely ignores their content. Restore the three-language configuration from Git before switching profiles again.
-
-## Build
-
-Preview while writing:
-
-```bash
-hugo server
-```
-
-Run the production build locally before deploying:
+Production build, the same way CI runs it:
 
 ```bash
 hugo --cleanDestinationDir --gc --minify --environment production \
   --printPathWarnings
 ```
 
-Generated `public/`, `resources/`, and caches are ignored by Git. Because Hugo uses its built-in LibSass compiler, the upstream LibSass deprecation warning is expected — keep warnings visible for review, and do not enable `--panicOnWarning` or `HUGO_PANICONWARNING`.
+`public/`, `resources/`, and caches are Git-ignored. The upstream LibSass
+deprecation warning is expected; keep warnings visible and do not enable
+`--panicOnWarning` or `HUGO_PANICONWARNING`.
 
-## GitHub Pages
+## Content map
+
+```text
+content/
+├── _index.*            home (renders data/home sections)
+├── docs/
+│   ├── introduction/   overview, architecture
+│   ├── get-started/    requirements, installation, quickstart
+│   ├── tutorial/       file pipeline, emulator, MCP, deployment
+│   ├── reference/      commands, configuration, API, limits
+│   └── develop/        build from source, design documents
+└── blog/
+    └── release/        release announcements
+```
+
+English files end in `.md`; Chinese peers end in `.zh.md` and sit side by side.
+Keep translated files together and keep explicit heading IDs aligned between
+languages. The landing page copy lives in `data/home/en.yaml` and
+`data/home/zh.yaml`.
+
+## Languages
+
+English is the default language; Chinese is a full peer. French stays declared
+but disabled so `.fr.md` suffixes are recognized and ignored. To change the
+profile:
+
+```bash
+cp examples/hugo.single.yaml hugo.yaml     # English only
+cp examples/hugo.bilingual.yaml hugo.yaml  # English + Chinese (current)
+```
+
+Restore the three-language configuration from Git before switching profiles
+again.
+
+## Deployment (GitHub Pages)
+
+`.github/workflows/github-pages.yaml` builds on every push to `main` (and on
+manual dispatch), then publishes through the Pages deployment API. One-time
+setup:
 
 1. Open **Settings → Pages** and choose **GitHub Actions** as the source.
-2. Push `main`, or run **Deploy to GitHub Pages** manually from the Actions tab.
+2. Push to `main`, or run **Deploy to GitHub Pages** from the Actions tab.
 
-`.github/workflows/github-pages.yaml` installs Go 1.27.3 and Hugo Extended 0.168.0, performs a production build, calculates the correct GitHub project subpath, and publishes the artifact through the Pages deployment API.
-
-## Cloudflare Pages
-
-The Cloudflare workflow uses Direct Upload so the same production build runs in GitHub Actions.
-
-1. Create a Cloudflare Pages **Direct Upload** project. Use the repository name as the project name, or set a repository variable named `CLOUDFLARE_PROJECT_NAME`.
-2. Add repository secrets `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN`. The token needs **Account → Cloudflare Pages → Edit**.
-3. Run **Deploy to Cloudflare Pages** manually once. To deploy every push to `main`, add the repository variable `CLOUDFLARE_PAGES_ENABLED=true`.
-
-The default canonical address is `https://<project>.pages.dev/`. Set `CLOUDFLARE_SITE_URL` to a custom production URL when you attach a domain.
-
-Cloudflare Git integration is a separate deployment mode. Use either Git integration or this Direct Upload workflow for a given Pages project, not both.
-
-## Pre-launch checklist
-
-After your deployment workflow succeeds, open `/`, `/zh/`, and `/fr/` and check representative Blog, Docs, and Book pages on both desktop and mobile viewports.
+The workflow installs Go 1.27.3 and Hugo Extended 0.168.0, downloads the pinned
+OINK module, builds with `--minify`, derives the correct base URL from the Pages
+configuration (project subpath or custom domain), and uploads the artifact. To
+serve the site at a custom domain instead of `vectorfs.github.io`, add the
+domain in **Settings → Pages** — the workflow picks it up automatically.
 
 ## License
 
-MIT. Replace the generic copyright line when adopting the template.
-
-For OINK theme development with a sibling checkout, use `make dev` (or `make dev THEME_DIR=/path/to/oink`). `make serve` and `make build` explicitly use the published module pin.
+MIT. The VectorFS mark and product are Apache-2.0, see the main repository.

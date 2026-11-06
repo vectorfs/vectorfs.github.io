@@ -1,4 +1,4 @@
-module github.com/pgsty/oink-starter
+module github.com/vectorfs/vectorfs.github.io
 
 go 1.27.3
 

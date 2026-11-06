@@ -1,6 +1,6 @@
 # Minimal single-language profile. Copy this file to ../hugo.yaml to use it.
-title: Project Name
-baseURL: https://example.org/
+title: VectorFS
+baseURL: https://vectorfs.github.io/
 defaultContentLanguage: en
 disableLanguages: [zh, fr]
 enableGitInfo: true
@@ -13,22 +13,22 @@ languages:
     label: English
     locale: en-US
     weight: 1
-    title: Project Name
+    title: VectorFS
     params:
-      description: Documentation, updates, and guides for your project.
+      description: A self-hosted, single-binary vector store that speaks the S3 Vectors API and turns files into searchable embeddings.
   # Keep disabled languages declared so Hugo recognizes .zh.md and .fr.md as
   # translations instead of treating them as duplicate English pages.
   zh:
     label: 简体中文
     locale: zh-CN
     weight: 2
-    title: Project Name
+    title: VectorFS
     hasCJKLanguage: true
   fr:
     label: Français
     locale: fr-FR
     weight: 3
-    title: Project Name
+    title: VectorFS
 
 markup:
   goldmark:
@@ -49,9 +49,12 @@ outputs:
 params:
   offline_search: true
   copyright:
-    authors: Project contributors
+    authors: The VectorFS authors
     from_year: 2026
   footer_center_info: ''
+  github_repo: https://github.com/vectorfs/vectorfs
+  github_branch: main
+  logo: icons/logo.svg
   ui:
     preset: paper
     preset_menu: [paper, slate, ink, terminal]

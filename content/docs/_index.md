@@ -1,6 +1,6 @@
 ---
 title: Docs
-description: Learn the project, install it, follow a tutorial, and look up exact behavior.
+description: Understand VectorFS, install it, work through guides, and look up exact behavior.
 type: docs
 icon: fa-solid fa-book
 sidebar_root_for: self
@@ -14,10 +14,11 @@ cascade:
   footer_style: slim
 ---
 
-The documentation follows four familiar paths: understand the project, get it running, learn by doing, then consult the reference.
+The documentation follows five paths: understand the project, get it running, learn the workflows, consult the reference, and develop the server itself.
 
 - [Introduction](/docs/introduction/)
 - [Get Started](/docs/get-started/)
-- [Tutorial](/docs/tutorial/)
+- [Guides](/docs/tutorial/)
 - [Reference](/docs/reference/)
+- [Develop](/docs/develop/)
 {.cards}

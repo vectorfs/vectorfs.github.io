@@ -1,37 +1,163 @@
-sections: [hero, cards, cta]
+sections: [hero, metrics, command-box, capabilities, steps, cards, faq, cta]
 
 hero:
-  align: center
-  eyebrow: Open-source project starter
+  align: start
+  eyebrow: Self-hosted · Apache-2.0 · Rust
   title_lines:
-    - words: [{ text: Your project. }]
-    - words: [{ text: Clearly documented. }]
-  lead: A ready-to-edit home for documentation, project updates, and long-form guides.
+    - words: [{ text: Store files. }]
+    - words: [{ text: Search semantically. }]
+  lead: >-
+    VectorFS is a single binary that speaks the S3 Vectors API and turns the
+    files you drop in into searchable embeddings — no external vector
+    database, no glue code.
   actions:
-    - { label: Read the docs, url: docs/, icon: fa-solid fa-book, style: primary }
-    - { label: Follow the tutorial, url: book/, icon: fa-solid fa-arrow-right, style: ghost }
+    - { label: Get started, url: docs/get-started/, icon: fa-solid fa-rocket, style: primary }
+    - { label: GitHub, url: https://github.com/vectorfs/vectorfs, icon: fa-brands fa-github, style: ghost, external: true }
+  image: { src: icons/logo.svg, dark: icons/logo.svg, alt: VectorFS logo }
+  media: { ratio: '1fr 220px', max_width: 220px, hide_below: md }
+
+metrics:
+  title: One server, measured
+  items:
+    - { value: 21, label: s3vectors operations, source: { label: s3vectors-2025-07-15, url: docs/reference/api/ } }
+    - { value: 8, label: native /x-vf operations }
+    - { value: 3, label: storage backends }
+    - { value: 0, label: external services required }
+
+command_box:
+  title: From zero to semantic search
+  code: |
+    vectorfs init --preset text-rag --data-dir ./data
+    vectorfs serve --data-dir ./data
+    vf put report.pdf --bucket docs
+    vf search "capacity planning" --bucket docs
+  lang: bash
+  note: >-
+    First boot with the text-rag preset downloads the default embedding model
+    (gte-multilingual-base, about 1.2 GiB). Set HF_ENDPOINT to use a mirror.
+
+capabilities:
+  title: Two API faces, one server
+  items:
+    - title: s3vectors API
+      motto: Protocol-first compatibility
+      bullets:
+        - All 21 operations of s3vectors-2025-07-15
+        - Byte-compatible errors, strong read-after-write
+        - Verified with unmodified boto3 and aws-sdk-go-v2
+      url: docs/reference/api/
+      visual:
+        type: code
+        title: boto3, unchanged
+        lines:
+          - { prefix: '>>> ', text: 'client = boto3.client("s3vectors",' }
+          - { prefix: '... ', text: '    endpoint_url="http://127.0.0.1:8787")' }
+          - { prefix: '>>> ', text: 'client.create_vector_bucket(' }
+          - { prefix: '... ', text: '    vectorBucketName="docs")' }
+          - { prefix: '>>> ', text: 'client.query_vectors(..., topK=2)' }
+    - title: vectorfs API
+      motto: Files in, semantic search out
+      bullets:
+        - 8 native operations under /x-vf/&lt;Op&gt;
+        - Extract, chunk, and embed on ingest
+        - SigV4 authentication on both faces
+      url: docs/tutorial/file-pipeline/
+      visual:
+        type: code
+        title: vf CLI
+        lines:
+          - { prefix: '$ ', text: 'vf put report.pdf --bucket docs' }
+          - { class: ok, text: 'INDEXED docs/report.pdf (18 chunks)' }
+          - { prefix: '$ ', text: 'vf search "capacity planning" --bucket docs' }
+          - { class: ok, text: 'docs/report.pdf  0.874' }
+          - { class: ok, text: 'docs/plan-2027.md  0.791' }
+    - title: Pluggable backends
+      motto: No storage engine of its own
+      bullets:
+        - 'file — a plain local directory, zero configuration'
+        - 'memory — volatile, for CI and emulator mode'
+        - 's3 — any S3-compatible endpoint, verified on SeaweedFS and R2'
+      url: docs/tutorial/deploy/
+      visual:
+        type: card
+        icon: fa-solid fa-database
+        title: Lance + JSON, in your store
+        lines: ['file · default · zero-config', 'memory · volatile · CI', 's3+http:// · SeaweedFS · R2']
+
+steps:
+  title: From file to answer
+  items:
+    - title: Put the file
+      desc: Drop a file into a vector bucket with `vf put`. The client waits until it is indexed — or pass `--async` and poll.
+      cmd: { code: vf put report.pdf --bucket docs }
+    - title: Extract
+      desc: PDF via pdfium or the pure-Rust pdf-inspector, plus Markdown and plain text, chosen by an ordered fallback chain.
+    - title: Chunk
+      desc: Token-window chunking with defaults of 512 tokens and 64 overlap — safe for CJK text.
+    - title: Embed and search
+      desc: Embed locally with ONNX or any OpenAI-compatible endpoint. Every chunk keeps `x-vf-src-*` provenance metadata.
+      cmd: { code: vf search "capacity planning" --bucket docs }
 
 cards:
-  eyebrow: Start with structure
-  title: Everything has a place
+  eyebrow: Why VectorFS
+  title: Boring storage, semantic retrieval
   columns: 3
   items:
-    - title: Blog
-      desc: Publish posts, design notes, and release announcements.
-      icon: fa-solid fa-pen-nib
-      url: blog/
-    - title: Docs
-      desc: Organize reference material as Introduction, Get Started, Tutorial, and Reference.
-      icon: fa-solid fa-book-open
-      url: docs/
-    - title: Book
-      desc: Teach a complete workflow in a focused, sequential reading experience.
-      icon: fa-solid fa-graduation-cap
-      url: book/
+    - title: Drop-in emulator
+      desc: Run the full s3vectors protocol locally for development and CI — memory backend, `--no-auth`, real error shapes.
+      icon: fa-solid fa-cloud-arrow-down
+      url: docs/tutorial/emulator/
+    - title: Provenance built in
+      desc: Every chunk carries its source URI, name, model, and modality — filterable at query time.
+      icon: fa-solid fa-fingerprint
+      url: docs/tutorial/file-pipeline/
+    - title: Your files stay yours
+      desc: A vector bucket maps to a source bucket plus a `-vf` system bucket. GC only removes vectors derived from deleted files.
+      icon: fa-solid fa-shield-halved
+      url: docs/introduction/architecture/
+    - title: Local-first models
+      desc: gte-multilingual-base on a local ONNX runtime by default; an air-gapped preset ships offline mode.
+      icon: fa-solid fa-microchip
+      url: docs/get-started/quickstart/
+    - title: MCP for agents
+      desc: A stdio MCP server with read-only or read-write tool sets; `vf mcp` proxies a shared daemon.
+      icon: fa-solid fa-robot
+      url: docs/tutorial/mcp/
+    - title: Single writer, safe
+      desc: Per-bucket TTL-heartbeat locks keep ingest serialized; reads stay strongly consistent.
+      icon: fa-solid fa-lock
+      url: docs/introduction/architecture/
+
+faq:
+  title: Frequently asked questions
+  items:
+    - question: Is VectorFS production-ready?
+      answer: >-
+        Not yet. v0.2 is a pre-release with the text modality as its MVP.
+        Image modality, OCR, docx/HTML, and hybrid full-text retrieval are
+        planned for v0.3.
+    - question: Which file formats are supported?
+      answer: >-
+        PDF, Markdown, and plain text today. PDF extraction runs through
+        pdfium or the pure-Rust pdf-inspector; more modalities arrive in v0.3.
+    - question: Does it need a GPU?
+      answer: >-
+        No. The default text-rag preset embeds with a local ONNX runtime on
+        CPU. The model download is about 1.2 GiB; everything after that is
+        local.
+    - question: What happens to vectors written through the s3vectors API?
+      answer: >-
+        They are never touched. Garbage collection only deletes vectors that
+        the file layer derived from deleted source objects.
+    - question: How is this different from a vector database?
+      answer: >-
+        VectorFS has no storage engine of its own. Your data stays as Lance
+        and JSON in the backend you choose, and the s3vectors face works with
+        standard AWS SDKs unchanged.
 
 cta:
-  title: Make this starter yours.
-  text: Change the project name and URL, replace the sample copy, and publish.
-  label: Get started
-  url: docs/get-started/
-  style: primary
+  title: Run it locally in five minutes
+  text: One server binary, one client binary, standard SDKs on top. Read the docs, or browse the source.
+  actions:
+    - { label: Read the docs, url: docs/, icon: fa-solid fa-book, style: primary }
+    - { label: View on GitHub, url: https://github.com/vectorfs/vectorfs, icon: fa-brands fa-github, style: ghost, external: true }

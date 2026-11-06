@@ -1,6 +1,6 @@
 ---
 title: 快速上手
-description: 检查前置条件并完成第一次安装。
+description: 确认环境要求、安装二进制、跑出第一次语义搜索。
 weight: 20
 icon: fa-solid fa-rocket
 menus:
@@ -12,4 +12,4 @@ menus:
       icon: fa-solid fa-rocket
 ---
 
-从一台干净的机器开始，得到一个可以工作的本地结果。
+从一台干净的机器到看见 `vf search` 的结果，大约五分钟。

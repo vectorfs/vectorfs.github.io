@@ -1,15 +1,15 @@
 ---
-title: 教程
-description: 通过完成一次小而完整的修改来学习项目。
+title: 指南
+description: 依次走过文件管线、SDK 模拟器、MCP 与部署。
 weight: 30
-icon: fa-solid fa-graduation-cap
+icon: fa-solid fa-map
 menus:
   main:
-    identifier: docs-tutorial
+    identifier: docs-guides
     parent: docs
     weight: 30
     params:
-      icon: fa-solid fa-graduation-cap
+      icon: fa-solid fa-map
 ---
 
-跟随一个端到端任务，而不是只阅读彼此孤立的知识点。
+按多数团队采用的顺序，讲清各个主要工作流。

@@ -1,15 +1,15 @@
 ---
 title: Reference
-description: Look up configuration and commands without reading a tutorial.
+description: Commands, configuration, API operations, and enforced limits.
 weight: 40
-icon: fa-solid fa-book-open
+icon: fa-solid fa-scroll
 menus:
   main:
     identifier: docs-reference
     parent: docs
     weight: 40
     params:
-      icon: fa-solid fa-book-open
+      icon: fa-solid fa-scroll
 ---
 
-Use this section when you already know what you need to find.
+Exact behavior, in the order you usually need to look it up.

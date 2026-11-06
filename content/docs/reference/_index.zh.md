@@ -1,15 +1,15 @@
 ---
 title: 参考
-description: 不必重读教程，直接查询配置与命令。
+description: 命令、配置、API 操作与强制执行的限额。
 weight: 40
-icon: fa-solid fa-book-open
+icon: fa-solid fa-scroll
 menus:
   main:
     identifier: docs-reference
     parent: docs
     weight: 40
     params:
-      icon: fa-solid fa-book-open
+      icon: fa-solid fa-scroll
 ---
 
-当你已经知道自己要查什么时，请使用这一栏目。
+按你通常查阅的顺序，给出精确行为。

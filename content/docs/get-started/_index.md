@@ -1,6 +1,6 @@
 ---
 title: Get Started
-description: Check the prerequisites and complete a first installation.
+description: Check requirements, install the binaries, and run your first semantic search.
 weight: 20
 icon: fa-solid fa-rocket
 menus:
@@ -12,4 +12,4 @@ menus:
       icon: fa-solid fa-rocket
 ---
 
-Move from a clean machine to a working local result.
+From a clean machine to `vf search` results in about five minutes.

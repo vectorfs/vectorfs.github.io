@@ -1,6 +1,6 @@
 ---
 title: 简介
-description: 了解项目以及它背后的核心思路。
+description: 理解 VectorFS 是什么，以及它背后的设计想法。
 weight: 10
 icon: fa-solid fa-circle-info
 menus:
@@ -12,4 +12,4 @@ menus:
       icon: fa-solid fa-circle-info
 ---
 
-第一次接触项目时，请从这里开始。
+初次接触 VectorFS，从这里开始。

@@ -1,37 +1,158 @@
-sections: [hero, cards, cta]
+sections: [hero, metrics, command-box, capabilities, steps, cards, faq, cta]
 
 hero:
-  align: center
-  eyebrow: 开源项目起步模板
+  align: start
+  eyebrow: 自托管 · Apache-2.0 · Rust
   title_lines:
-    - words: [{ text: 你的项目， }]
-    - words: [{ text: 清楚讲明白。 }]
-  lead: 一个可以直接修改的项目首页，容纳文档、动态与长篇指南。
+    - words: [{ text: 存文件。 }]
+    - words: [{ text: 按语义找。 }]
+  lead: >-
+    VectorFS 是一个单二进制服务：对外讲 S3 Vectors 协议，把你放进去的文件
+    自动向量化、可按语义检索——不需要外部向量数据库，也不用写胶水代码。
   actions:
-    - { label: 阅读文档, url: docs/, icon: fa-solid fa-book, style: primary }
-    - { label: 跟随教程, url: book/, icon: fa-solid fa-arrow-right, style: ghost }
+    - { label: 快速上手, url: docs/get-started/, icon: fa-solid fa-rocket, style: primary }
+    - { label: GitHub, url: https://github.com/vectorfs/vectorfs, icon: fa-brands fa-github, style: ghost, external: true }
+  image: { src: icons/logo.svg, dark: icons/logo.svg, alt: VectorFS 标识 }
+  media: { ratio: '1fr 220px', max_width: 220px, hide_below: md }
+
+metrics:
+  title: 一个服务端，几个数字
+  items:
+    - { value: 21, label: 个 s3vectors 操作, source: { label: s3vectors-2025-07-15, url: docs/reference/api/ } }
+    - { value: 8, label: 个 /x-vf 原生操作 }
+    - { value: 3, label: 种存储后端 }
+    - { value: 0, label: 个必需的外部服务 }
+
+command_box:
+  title: 从零到语义检索
+  code: |
+    vectorfs init --preset text-rag --data-dir ./data
+    vectorfs serve --data-dir ./data
+    vf put report.pdf --bucket docs
+    vf search "容量规划" --bucket docs
+  lang: bash
+  note: >-
+    首次以 text-rag 预设启动会下载默认嵌入模型（gte-multilingual-base，
+    约 1.2 GiB）。可设置 HF_ENDPOINT 使用镜像。
+
+capabilities:
+  title: 两张 API 面，一个服务端
+  items:
+    - title: s3vectors API
+      motto: 协议优先的兼容性
+      bullets:
+        - s3vectors-2025-07-15 全部 21 个操作
+        - 逐字节兼容的错误形状，强一致读后写
+        - 用未修改的 boto3 与 aws-sdk-go-v2 验证
+      url: docs/reference/api/
+      visual:
+        type: code
+        title: boto3，原样可用
+        lines:
+          - { prefix: '>>> ', text: 'client = boto3.client("s3vectors",' }
+          - { prefix: '... ', text: '    endpoint_url="http://127.0.0.1:8787")' }
+          - { prefix: '>>> ', text: 'client.create_vector_bucket(' }
+          - { prefix: '... ', text: '    vectorBucketName="docs")' }
+          - { prefix: '>>> ', text: 'client.query_vectors(..., topK=2)' }
+    - title: vectorfs API
+      motto: 文件进，语义搜索出
+      bullets:
+        - /x-vf/&lt;Op&gt; 下的 8 个原生操作
+        - 摄取时解析、分块、嵌入
+        - 两张 API 面统一用 SigV4 鉴权
+      url: docs/tutorial/file-pipeline/
+      visual:
+        type: code
+        title: vf 命令行
+        lines:
+          - { prefix: '$ ', text: 'vf put report.pdf --bucket docs' }
+          - { class: ok, text: 'INDEXED docs/report.pdf（18 个分块）' }
+          - { prefix: '$ ', text: 'vf search "容量规划" --bucket docs' }
+          - { class: ok, text: 'docs/report.pdf  0.874' }
+          - { class: ok, text: 'docs/plan-2027.md  0.791' }
+    - title: 可插拔后端
+      motto: 没有自研存储引擎
+      bullets:
+        - 'file —— 普通本地目录，零配置'
+        - 'memory —— 易失，适合 CI 与模拟器'
+        - 's3 —— 任意 S3 兼容端点，SeaweedFS 与 R2 已验证'
+      url: docs/tutorial/deploy/
+      visual:
+        type: card
+        icon: fa-solid fa-database
+        title: 数据是 Lance + JSON，留在你的存储里
+        lines: ['file · 默认 · 零配置', 'memory · 易失 · CI', 's3+http:// · SeaweedFS · R2']
+
+steps:
+  title: 从文件到答案
+  items:
+    - title: 放入文件
+      desc: 用 `vf put` 把文件放进向量桶。客户端会等到索引完成；也可以加 `--async` 异步摄取、稍后轮询。
+      cmd: { code: vf put report.pdf --bucket docs }
+    - title: 解析
+      desc: PDF 走 pdfium 或纯 Rust 的 pdf-inspector，另有 Markdown 与纯文本；解析器按有序回退链选择。
+    - title: 分块
+      desc: token 窗口分块，默认 512 token、重叠 64 —— 对 CJK 文本安全。
+    - title: 嵌入并搜索
+      desc: 本地 ONNX 或任意 OpenAI 兼容端点完成嵌入；每个分块都带 `x-vf-src-*` 溯源元数据。
+      cmd: { code: vf search "容量规划" --bucket docs }
 
 cards:
-  eyebrow: 从清晰结构开始
-  title: 每类内容都有自己的位置
+  eyebrow: 为什么选 VectorFS
+  title: 存储保持朴素，检索按语义来
   columns: 3
   items:
-    - title: 博客
-      desc: 发布文章、设计记录与版本公告。
-      icon: fa-solid fa-pen-nib
-      url: blog/
-    - title: 文档
-      desc: 按简介、快速上手、教程与参考组织资料。
-      icon: fa-solid fa-book-open
-      url: docs/
-    - title: 书籍
-      desc: 用连续的阅读体验讲清一套完整工作流。
-      icon: fa-solid fa-graduation-cap
-      url: book/
+    - title: 开箱即用的模拟器
+      desc: 本地跑完整 s3vectors 协议，用于开发与 CI —— memory 后端、`--no-auth`、真实的错误形状。
+      icon: fa-solid fa-cloud-arrow-down
+      url: docs/tutorial/emulator/
+    - title: 内建溯源
+      desc: 每个分块都携带来源 URI、名称、模型与模态 —— 查询时可以直接过滤。
+      icon: fa-solid fa-fingerprint
+      url: docs/tutorial/file-pipeline/
+    - title: 文件始终是你的
+      desc: 一个向量桶对应源桶加 `-vf` 系统桶；GC 只删除因源对象被删而派生的向量。
+      icon: fa-solid fa-shield-halved
+      url: docs/introduction/architecture/
+    - title: 模型本地优先
+      desc: 默认在本地 ONNX 运行时跑 gte-multilingual-base；air-gapped 预设内置离线模式。
+      icon: fa-solid fa-microchip
+      url: docs/get-started/quickstart/
+    - title: 面向 Agent 的 MCP
+      desc: stdio MCP 服务器，工具集可只读或读写；`vf mcp` 以远程代理方式共用一个守护进程。
+      icon: fa-solid fa-robot
+      url: docs/tutorial/mcp/
+    - title: 单写者，更安全
+      desc: 每桶 TTL 心跳锁让摄取串行化；读取保持强一致。
+      icon: fa-solid fa-lock
+      url: docs/introduction/architecture/
+
+faq:
+  title: 常见问题
+  items:
+    - question: VectorFS 可以用于生产环境吗？
+      answer: >-
+        还不行。v0.2 是预发布版本，文本模态是当前的 MVP。图片模态、OCR、
+        docx/HTML 与混合全文检索计划在 v0.3 提供。
+    - question: 支持哪些文件格式？
+      answer: >-
+        目前支持 PDF、Markdown 与纯文本。PDF 解析走 pdfium 或纯 Rust 的
+        pdf-inspector；更多模态将在 v0.3 到来。
+    - question: 需要 GPU 吗？
+      answer: >-
+        不需要。默认的 text-rag 预设用本地 ONNX 运行时在 CPU 上嵌入。模型
+        下载约 1.2 GiB，之后的一切都在本地完成。
+    - question: 通过 s3vectors API 写入的向量会被动到吗？
+      answer: >-
+        永远不会。垃圾回收只删除文件层因源对象被删除而派生的向量。
+    - question: 它和向量数据库有什么区别？
+      answer: >-
+        VectorFS 没有自研存储引擎。数据以 Lance 和 JSON 的形式留在你选择
+        的后端里；s3vectors 面与标准 AWS SDK 原样兼容。
 
 cta:
-  title: 把这个模板变成你的站点。
-  text: 修改项目名称与网址，替换示例文案，然后发布。
-  label: 开始使用
-  url: docs/get-started/
-  style: primary
+  title: 五分钟在本地跑起来
+  text: 一个服务端二进制、一个客户端二进制，上面接标准 SDK。看文档，或者直接读源码。
+  actions:
+    - { label: 阅读文档, url: docs/, icon: fa-solid fa-book, style: primary }
+    - { label: 在 GitHub 上查看, url: https://github.com/vectorfs/vectorfs, icon: fa-brands fa-github, style: ghost, external: true }

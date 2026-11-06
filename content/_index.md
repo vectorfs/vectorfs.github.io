@@ -1,4 +1,4 @@
 ---
-title: Project Name
-description: Documentation, updates, and a practical guide for your project.
+title: VectorFS
+description: Store files, search semantically — a self-hosted, S3 Vectors-compatible vector store with file vectorization.
 ---
